@@ -1,38 +1,48 @@
+
+
+import { encontrarDocumento,inserirDocumento,atualizaDocumento,obterDocumentos,excluirDocumento } from "./documentoDB.js";
 import io from "./sevidor.js";
 
-const documentos = [
-    {
-        nome:"JavaScript",
-        texto: "texto de javacript....."
-    },
-    {
-        nome: "Node",
-        texto: "texto de Node....."
-    },
-    {
-        nome: "Socket.io",
-        texto: "texto de Socket.io......"
-    }
-]
 
 io.on("connection", (socket) => {
     console.log("Um cliente se conectou id:",socket.id  );
 
-    socket.on("selecionar_documento", (nomeDocumento, devolverTexto) => {
-        socket.join(nomeDocumento)
-        const documento = encontrarDocumento (nomeDocumento);
+    socket.on("inserir-documento", async (nomeDocumento) => {
+        const DocumentoExist = (await encontrarDocumento (nomeDocumento)) !== null;
+        if(DocumentoExist){ return socket.emit("documento-existente",nomeDocumento) }
+
+        const resultado = await inserirDocumento(nomeDocumento);
         
+        if(resultado.acknowledged){
+           io.emit("inserir-documento-interface",nomeDocumento)
+        }
+      });
+
+    socket.on("excluir-documento", async (nomeDocumento) => {
+        const resultadoDaExclusao = await excluirDocumento(nomeDocumento);
+        if(resultadoDaExclusao.deletedCount){
+            io.emit("excluir-documento-sucesso",nomeDocumento);
+        }
+    });
+
+    socket.on("obter_documentos", async (devolverDocumentos) => {
+        const documentos =  await obterDocumentos();
+        devolverDocumentos(documentos);
+      });
+
+    socket.on("selecionar_documento", async (nomeDocumento, devolverTexto) => {
+        socket.join(nomeDocumento)
+        const documento =  await encontrarDocumento (nomeDocumento);
         if (documento) {
-            
-            devolverTexto(documento.texto)
+            devolverTexto(documento.Texto)
           }
        
       });
 
-    socket.on("text_editor", ({texto, nomeDocumento}) => {
-        const documento = encontrarDocumento (nomeDocumento);    
-        if (documento) {
-            documento.texto = texto;
+    socket.on("text_editor", async ({texto, nomeDocumento}) => {
+        const atualizacao = await atualizaDocumento(nomeDocumento, texto);    
+        
+        if (atualizacao.modifiedCount) {
             socket.to(nomeDocumento).emit("texto_editor_clientes",texto);
           }
        
@@ -46,10 +56,3 @@ io.on("connection", (socket) => {
 })
 
 
-function encontrarDocumento(nome) {
-    const documento = documentos.find((documento) => {
-      return documento.nome === nome;
-    });
-  
-    return documento;
-  }
