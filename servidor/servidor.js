@@ -3,7 +3,9 @@ import url from "url";
 import path from "path";
 import http from "http";
 import { Server } from "socket.io";
-import "./dbConnect.js";
+
+import "./db/dbConnect.js";
+
 const app = express();
 const porta = process.env.porta || 3000;
 
@@ -18,4 +20,3 @@ servidorHttp.listen(porta, () => console.log(`Servidor escutando na porta ${port
 const io = new Server(servidorHttp);
 
 export default io;
-
