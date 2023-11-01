@@ -43,4 +43,10 @@ socket.on("excluir_documento_sucesso", (nome) => {
   alertarERedirecionar(nome);
 });
 
+socket.on("usuario_ja_no_documento",() => {
+  alert("Erro no usuario_ja_no_documento");
+  window.location.href="/";
+});
+
+
 export { emitirTextoEditor, selecionarDocumento, emitirExcluirDocumento };
