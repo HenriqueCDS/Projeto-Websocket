@@ -1,6 +1,6 @@
 function definirCookie(chave, valor) {
     document.cookie =`${chave}=${valor};path=/ `;
-    console.log(document.cookie)
+    
 }
 
 function obterCookie(chave){

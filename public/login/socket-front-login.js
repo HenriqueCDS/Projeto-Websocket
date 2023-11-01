@@ -3,7 +3,7 @@ const socket = io();
 
 function emitirAutenticarUsuario(dados) {
     socket.emit("autenticar_usuario",dados);
-    console.log("Teste")
+    
     socket.on("autenticacao_sucesso", (tokenJwt) => {
        
         definirCookie("tokenJwt",tokenJwt);

@@ -2,12 +2,12 @@ import { BuscarUsuario, cadastrarUsuario } from "../db/usuarioDb.js";
 
 function registrarEventosCadastro(socket,io) {
     socket.on("cadastrar_usuario", async(dados) =>{
-        console.log(dados);
+       
         const usuario = await BuscarUsuario(dados.nome);
-        console.log(usuario)
+       
         if(usuario === null){
             const resultado = await cadastrarUsuario(dados);
-            console.log(resultado)
+            
             if(resultado.acknowledged){
                 socket.emit("cadastro_sucesso");
             }else{

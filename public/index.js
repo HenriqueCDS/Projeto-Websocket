@@ -12,7 +12,7 @@ const botaoLogout =  document.getElementById("botao-logout");
 botaoLogout.addEventListener("click", ()=>{
   removerCookie("tokenJwt");
   alert("Usuario Deslogado");
-  console.log(tokenJwt)
+  
   window.location.href = '/login/index.html';
 })
 
