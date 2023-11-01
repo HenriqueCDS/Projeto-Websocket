@@ -6,13 +6,14 @@ import gerarJWT from "../utils/gerarJWT.js";
 
 function registrarEventosLogin(socket,io) {
     socket.on("autenticar_usuario", async ({nome, senha}) =>{
+        console.log("autenticar_usuario");
         const usuario = await BuscarUsuario(nome);
-        console.log(usuario)
+       
         if(usuario){
             const autenticado = AutenticarUsuario(senha,usuario)
             if(autenticado){
                 const tokenJwt = gerarJWT({nomeUsuario:nome});
-                console.log(tokenJwt);
+               
                 socket.emit('autenticacao_sucesso',tokenJwt);
             }else{
                 socket.emit('autenticacao_erro');
