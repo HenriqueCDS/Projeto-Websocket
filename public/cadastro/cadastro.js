@@ -12,7 +12,6 @@ form.addEventListener("submit", (evento) => {
         alert('falto cadastrar algum campo')
     }
 
-    console.log(nome,senha)
     emitirCadastrarUsuario({ nome, senha })
 
 })
